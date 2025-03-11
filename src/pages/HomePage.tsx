@@ -20,6 +20,11 @@ const categories = [
     subCategories: ["Restaurantes", "Recetas", "Chefs"]
   },
   {
+    name: "RealEstate",
+    subCategories: ["", "", ""]
+   
+  },
+  {
     name: "Lifestyle",
     subCategories: ["Moda", "Belleza", "Bienestar"]
   },
@@ -87,34 +92,41 @@ export function HomePage() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8">
-              {categories.map((category) => (
-                <div
-                  key={category.name}
-                  className="relative group"
-                  onMouseEnter={() => setActiveCategory(category.name)}
-                  onMouseLeave={() => setActiveCategory(null)}
-                >
-                  <a
-                    href={`#${category.name.toLowerCase()}`}
-                    className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-                  >
-                    {category.name}
-                  </a>
-                  {/* Dropdown menu */}
-                  <div className={`absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ${activeCategory === category.name ? 'block' : 'hidden'}`}>
-                    {category.subCategories.map((subCategory) => (
-                      <a
-                        key={subCategory}
-                        href={`#${subCategory.toLowerCase()}`}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        {subCategory}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </nav>
+  {categories
+    .sort((a, b) => a.name.localeCompare(b.name)) // Ordenar categorías alfabéticamente
+    .map((category) => (
+      <div
+        key={category.name}
+        className="relative group"
+        onMouseEnter={() => setActiveCategory(category.name)}
+        onMouseLeave={() => setActiveCategory(null)}
+      >
+        <a
+          href={`#${category.name.toLowerCase()}`}
+          className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
+        >
+          {category.name}
+        </a>
+        {/* Dropdown menu */}
+        <div
+          className={`absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ${activeCategory === category.name ? 'block' : 'hidden'}`}
+        >
+          {category.subCategories
+            .sort() // Ordenar subcategorías alfabéticamente
+            .map((subCategory) => (
+              <a
+                key={subCategory}
+                href={`#${subCategory.toLowerCase()}`}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                {subCategory}
+              </a>
+            ))}
+        </div>
+      </div>
+    ))}
+</nav>
+
 
             {/* Search and Auth */}
             <div className="flex items-center space-x-4">
@@ -189,63 +201,64 @@ export function HomePage() {
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Article (Left) */}
-          <div className="lg:col-span-5">
-            {news[0] && (
-              <article className="bg-white rounded-lg overflow-hidden shadow-lg h-full">
-                <div className="aspect-w-16 aspect-h-9 relative">
-                  <img
-                    src={news[0].image_url}
-                    alt={news[0].title}
-                    className="w-full h-64 object-cover"
-                  />
-                </div>
-                <div className="p-6 flex flex-col h-[calc(100%-16rem)]">
-                  <span className="text-blue-600 text-sm font-semibold">{news[0].category}</span>
-                  <h2 className="text-2xl font-bold mt-2">{news[0].title}</h2>
-                  <p className="mt-4 text-gray-600 flex-grow">{news[0].excerpt}</p>
-                  <button className="mt-4 text-blue-600 font-semibold hover:text-blue-800">
-                    Leer más →
-                  </button>
-                </div>
-              </article>
-            )}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    {/* Main Article (Left) */}
+    <div className="lg:col-span-5">
+      {news[0] && (
+        <article className="bg-white rounded-lg overflow-hidden shadow-lg h-[500px]">
+          <div className="aspect-w-16 aspect-h-9 relative">
+            <img
+              src={news[0].image_url}
+              alt={news[0].title}
+              className="w-full h-64 object-cover"
+            />
           </div>
+          <div className="p-6 flex flex-col h-full">
+            <span className="text-blue-600 text-sm font-semibold">{news[0].category}</span>
+            <h2 className="text-2xl font-bold mt-2">{news[0].title}</h2>
+            <p className="mt-4 text-gray-600 flex-grow">{news[0].excerpt}</p>
+            <button className="mt-4 text-blue-600 font-semibold hover:text-blue-800">
+              Leer más →
+            </button>
+          </div>
+        </article>
+      )}
+    </div>
 
-          {/* Center Articles */}
-          <div className="lg:col-span-4 space-y-6">
-            {news.slice(1).map((article) => (
-              <article key={article.id} className="bg-white rounded-lg overflow-hidden shadow-md">
-                <div className="aspect-w-16 aspect-h-9">
-                  <img
-                    src={article.image_url}
-                    alt={article.title}
-                    className="w-full h-40 object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <span className="text-blue-600 text-sm font-semibold">{article.category}</span>
-                  <h3 className="text-lg font-semibold mt-2">{article.title}</h3>
-                  <p className="mt-2 text-gray-600 text-sm">{article.excerpt}</p>
-                  <button className="mt-3 text-blue-600 text-sm font-semibold hover:text-blue-800">
-                    Leer más →
-                  </button>
-                </div>
-              </article>
-            ))}
+    {/* Center Articles */}
+    <div className="lg:col-span-4 space-y-6">
+      {news.slice(1).map((article) => (
+        <article key={article.id} className="bg-white rounded-lg overflow-hidden shadow-md h-[500px]">
+          <div className="aspect-w-16 aspect-h-9">
+            <img
+              src={article.image_url}
+              alt={article.title}
+              className="w-full h-40 object-cover"
+            />
           </div>
+          <div className="p-4 h-full flex flex-col">
+            <span className="text-blue-600 text-sm font-semibold">{article.category}</span>
+            <h3 className="text-lg font-semibold mt-2">{article.title}</h3>
+            <p className="mt-2 text-gray-600 text-sm flex-grow">{article.excerpt}</p>
+            <button className="mt-3 text-blue-600 text-sm font-semibold hover:text-blue-800">
+              Leer más →
+            </button>
+          </div>
+        </article>
+      ))}
+    </div>
 
-          {/* Advertisement Space (Right) */}
-          <div className="lg:col-span-3">
-            <div className="bg-white rounded-lg shadow-md p-4 sticky top-24">
-              <h3 className="text-sm font-semibold text-gray-500 mb-4">PUBLICIDAD</h3>
-              <div className="bg-gray-100 h-[500px] flex items-center justify-center">
-                <p className="text-gray-500 text-center">Espacio Publicitario</p>
-              </div>
-            </div>
-          </div>
+    {/* Advertisement Space (Right) */}
+    <div className="lg:col-span-3">
+      <div className="bg-white rounded-lg shadow-md p-4 sticky top-24">
+        <h3 className="text-sm font-semibold text-gray-500 mb-4">PUBLICIDAD</h3>
+        <div className="bg-gray-100 h-[500px] flex items-center justify-center">
+          <p className="text-gray-500 text-center">Espacio Publicitario</p>
         </div>
+      </div>
+    </div>
+  </div>
+
 
         {/* Categories Section */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
